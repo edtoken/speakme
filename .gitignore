@@ -1,0 +1,13 @@
+node_modules
+.idea
+.sass-cache
+.DS_Store
+src
+theme
+*.md
+*.yml
+Dockerfile
+Dockerfile.debug
+nginx.conf
+run.sh
+webpack.run.js
