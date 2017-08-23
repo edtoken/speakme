@@ -15,9 +15,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 process.env.APP_PORT = process.env.APP_PORT || 5080;
 process.env.BACKEND_URL = process.env.BACKEND_URL || '';
-process.env.FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5080';
 process.env.RUN_ENVIRONMENT = process.env.NODE_ENV || 'production';
 process.env.NODE_ENV = process.env.RUN_ENVIRONMENT;
+
+process.env.FRONTEND_URL = process.env.FRONTEND_URL || process.env.NODE_ENV === 'development' ? 'http://localhost:5080' : '';
 
 const PORT = parseInt(process.env.APP_PORT);
 const isDevelopment = (process.env.NODE_ENV == 'development');
@@ -82,6 +83,7 @@ let CONFIG = {
 		],
 	} : {}),
 	output: {
+		publicPath: isDevelopment ? '/' : '/dist/',
 		path: path.resolve(__dirname, './dist'),
 		filename: '[name].[hash].bundle.js'
 	},
@@ -203,13 +205,19 @@ let CONFIG = {
 			template: './index.html',
 
 			BUILD_HASH: "{{ BUILD_HASH }}",
-			BUILD_VERSION: isDevelopment ? BUILD_VERSION : "{{ BUILD_VERSION }}",
-			PACKAGE_VERSION: isDevelopment ? PACKAGE_VERSION : "{{ PACKAGE_VERSION }}",
+			// BUILD_VERSION: isDevelopment ? BUILD_VERSION : "{{ BUILD_VERSION }}",
+			BUILD_VERSION: BUILD_VERSION,
+			// PACKAGE_VERSION: isDevelopment ? PACKAGE_VERSION : "{{ PACKAGE_VERSION }}",
+			PACKAGE_VERSION: PACKAGE_VERSION,
 
-			BACKEND_URL: isDevelopment ? process.env.BACKEND_URL : '{{ BACKEND_URL }}',
-			FRONTEND_URL: isDevelopment ? process.env.FRONTEND_URL : '{{ FRONTEND_URL }}',
-			RUN_ENVIRONMENT: isDevelopment ? process.env.RUN_ENVIRONMENT : '{{ RUN_ENVIRONMENT }}',
-			NODE_ENV: isDevelopment ? process.env.NODE_ENV : '{{ NODE_ENV }}',
+			// BACKEND_URL: isDevelopment ? process.env.BACKEND_URL : '{{ BACKEND_URL }}',
+			BACKEND_URL: process.env.BACKEND_URL,
+			// FRONTEND_URL: isDevelopment ? process.env.FRONTEND_URL : '{{ FRONTEND_URL }}',
+			FRONTEND_URL: process.env.FRONTEND_URL,
+			// RUN_ENVIRONMENT: isDevelopment ? process.env.RUN_ENVIRONMENT : '{{ RUN_ENVIRONMENT }}',
+			RUN_ENVIRONMENT: process.env.RUN_ENVIRONMENT,
+			// NODE_ENV: isDevelopment ? process.env.NODE_ENV : '{{ NODE_ENV }}',
+			NODE_ENV: process.env.NODE_ENV,
 
 			RANDOM_CACHE_STRING: getBuildRandomCacheString(),
 			chunks: buildConfig.__BUILD_CHUNKS__
