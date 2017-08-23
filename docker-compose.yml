@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+
+  speakme:
+    image: speakme
+    build:
+      context: ./
+    ports:
+      - "5080:5080"
+      - "5089:80"
+    environment:
+      DEBUG: 0
