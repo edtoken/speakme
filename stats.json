@@ -1,12 +1,12 @@
 {
   "assetsByChunkName": {
-    "main": "main.61f852ec986359027b48.bundle.js",
-    "vendor": "vendor.61f852ec986359027b48.bundle.js",
-    "react": "react.61f852ec986359027b48.bundle.js",
-    "redux": "redux.61f852ec986359027b48.bundle.js",
-    "style": "style.61f852ec986359027b48.bundle.js",
-    "loader": "loader.61f852ec986359027b48.bundle.js"
+    "main": "main.263eed2c7f98f0656689.bundle.js",
+    "vendor": "vendor.263eed2c7f98f0656689.bundle.js",
+    "react": "react.263eed2c7f98f0656689.bundle.js",
+    "redux": "redux.263eed2c7f98f0656689.bundle.js",
+    "style": "style.263eed2c7f98f0656689.bundle.js",
+    "loader": "loader.263eed2c7f98f0656689.bundle.js"
   },
-  "BUILD_HASH": "61f852ec986359027b48",
-  "BUILD_VERSION": 1503504911412
+  "BUILD_HASH": "263eed2c7f98f0656689",
+  "BUILD_VERSION": 1503505129140
 }
