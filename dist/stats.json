@@ -1,0 +1,12 @@
+{
+  "assetsByChunkName": {
+    "main": "main.752415b488f36e653f06.bundle.js",
+    "vendor": "vendor.752415b488f36e653f06.bundle.js",
+    "react": "react.752415b488f36e653f06.bundle.js",
+    "redux": "redux.752415b488f36e653f06.bundle.js",
+    "style": "style.752415b488f36e653f06.bundle.js",
+    "loader": "loader.752415b488f36e653f06.bundle.js"
+  },
+  "BUILD_HASH": "752415b488f36e653f06",
+  "BUILD_VERSION": 1503500979487
+}
