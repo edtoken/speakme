@@ -83,7 +83,7 @@ let CONFIG = {
 		],
 	} : {}),
 	output: {
-		publicPath: isDevelopment ? '/' : '/dist/',
+		publicPath: isDevelopment ? '/' : '/',
 		path: path.resolve(__dirname, './dist'),
 		filename: '[name].[hash].bundle.js'
 	},
