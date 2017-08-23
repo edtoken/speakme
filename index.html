@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dialogs</title>
 
-</head>
+<link rel="shortcut icon" href="/favicon.png"></head>
 <body>
 <style>
     @-webkit-keyframes bounce {
@@ -117,13 +117,13 @@
     }
 </style>
 <script>
-	var __BUILD_HASH__ = "<%= htmlWebpackPlugin.options.BUILD_HASH %>";
-	var __BUILD_VERSION__ = "<%= htmlWebpackPlugin.options.BUILD_VERSION %>";
-	var __PACKAGE_VERSION__ = "<%= htmlWebpackPlugin.options.PACKAGE_VERSION %>";
-	var __BACKEND_URL__ = "<%= htmlWebpackPlugin.options.BACKEND_URL %>";
-	var __FRONTEND_URL__ = "<%= htmlWebpackPlugin.options.FRONTEND_URL %>";
-	var __RUN_ENVIRONMENT__ = "<%= htmlWebpackPlugin.options.RUN_ENVIRONMENT %>";
-	var __NODE_ENV__ = "<%= htmlWebpackPlugin.options.NODE_ENV %>";
+	var __BUILD_HASH__ = "{{ BUILD_HASH }}";
+	var __BUILD_VERSION__ = "1503503173558";
+	var __PACKAGE_VERSION__ = "0.0.1";
+	var __BACKEND_URL__ = "";
+	var __FRONTEND_URL__ = "";
+	var __RUN_ENVIRONMENT__ = "production";
+	var __NODE_ENV__ = "production";
 	var __DEVELOPMENT__ = (__NODE_ENV__ != 'production');
 </script>
 
@@ -145,7 +145,7 @@
 <div id="environment" onclick="toggleEnvData()">
     <button>close</button>&nbsp;
     <a href="/theme" target="_blank">theme</a>
-    <a href="<%= htmlWebpackPlugin.options.BACKEND_URL %>/ping" target="_blank">backend ping</a>
+    <a href="/ping" target="_blank">backend ping</a>
     <p>ctrl+h show redux debugger</p>
     <script>
 		var _tmp_ = {
@@ -174,7 +174,7 @@
 <div id="app-wrapper"></div>
 
 <div style="display: none;">
-    "<%= htmlWebpackPlugin.options.RANDOM_CACHE_STRING %>"
+    "0123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990"
 </div>
-</body>
+<script type="text/javascript" src="/vendor.8113e300420cafc882d7.bundle.js"></script><script type="text/javascript" src="/react.8113e300420cafc882d7.bundle.js"></script><script type="text/javascript" src="/redux.8113e300420cafc882d7.bundle.js"></script><script type="text/javascript" src="/loader.8113e300420cafc882d7.bundle.js"></script></body>
 </html>
