@@ -325,7 +325,7 @@ class DialogItem extends Component {
 				console.log('END pause', currentTime, _endTime);
 			}
 
-		}, 50);
+		}, 10);
 	}
 
 	handleToggleStart(e) {
@@ -362,20 +362,23 @@ class DialogItem extends Component {
 		const {dialog, isActive} = this.props;
 		const {subtitlesIsLoading, subtitles, progress} = this.state;
 
-		const iconProps = {
+		const titleProps = {
 			style: {
 				cursor: 'pointer'
 			},
 			onClick: this.handleToggleStart
 		};
 
-		return (<div>
-			<h3>
-				{!isActive && <i {...iconProps} className="icon-right-open"/>}
-				{isActive && <i {...iconProps} className="icon-down-open"/>}
-				{dialog.title}
-			</h3>
-			{isActive && <div>
+		return (<div className={isActive ? 'panel' : ''}>
+			<div className={isActive ? 'panel-heading clearfix' : ''}>
+				<h3 {...titleProps} className={isActive ? 'panel-title' : ''}>
+					{!isActive && <i className="icon-right-open"/>}
+					{isActive && <i className="icon-down-open"/>}
+					{dialog.title}
+				</h3>
+			</div>
+
+			{isActive && <div className="panel-body">
 				<div className="embed-section">
 					<div className="embed-responsive embed-responsive-16by9">
 						<video ref="video" style={{minHeight: '150px'}}>
@@ -441,7 +444,9 @@ export default class Page extends Component {
 			<div className="row">
 				<div className="col-md-6 col-md-push-3">
 					<div style={{padding: '60px 0 15px'}}>
-						<h2 className="text-center">SpeakMe <small>{config.__BUILD_VERSION__}</small></h2>
+						<h2 className="text-center">SpeakMe
+							<small style={{fontSize: '40%'}}>v{config.__BUILD_VERSION__.toString().substr(-3)}</small>
+						</h2>
 						<hr/>
 					</div>
 
