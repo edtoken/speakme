@@ -204,7 +204,7 @@ class DialogMessageItem extends Component {
 		const speakingProcess = (speaking > 0);
 
 		let speakText = subtitle.text[0];
-		let isValidSpeak = (text && text === speakText.trim());
+		let isValidSpeak = (text && text.toLowerCase() === speakText.trim().toLowerCase());
 
 		return (<li className="list-group-item">
 			{subtitle.text[0]}&nbsp;&nbsp;
@@ -445,7 +445,8 @@ export default class Page extends Component {
 				<div className="col-md-6 col-md-push-3">
 					<div style={{padding: '60px 0 15px'}}>
 						<h2 className="text-center">SpeakMe
-							<small style={{fontSize: '40%'}}>v{config.__BUILD_VERSION__.toString().substr(-3)}</small>
+							<small title={config.__BUILD_VERSION__} style={{fontSize: '40%'}}>
+								v{config.__BUILD_VERSION__.toString().substr(-3)}</small>
 						</h2>
 						<hr/>
 					</div>
