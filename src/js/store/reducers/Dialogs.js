@@ -1,4 +1,5 @@
 const types = require('src/js/store/ActionTypes');
+const config = require('src/js/config');
 
 export const initialState = {
 	dialogs: {
@@ -6,8 +7,8 @@ export const initialState = {
 			0: {
 				id: 0,
 				title: 'Hello world',
-				video: '/data/Family_dialogue.mp4',
-				subtitles: '/data/Family_dialogue.RU_EN.srt'
+				video: config.__FRONTEND_URL__ + '/data/Family_dialogue.mp4',
+				subtitles: config.__FRONTEND_URL__ + '/data/Family_dialogue.RU_EN.srt'
 			},
 			1: {
 				id: 1,

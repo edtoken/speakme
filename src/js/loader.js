@@ -117,7 +117,8 @@ console.info('loader.js.config', JSON.parse(JSON.stringify(config)), 'time:', ne
 
 let firstLoad = true;
 const loadStats = () => {
-	const statsJsonUrl = config.__FRONTEND_URL__ + '/stats' + (config.__DEVELOPMENT__ ? '' : '.' + new Date().toString()) + '.json';
+	// const statsJsonUrl = config.__FRONTEND_URL__ + '/stats' + (config.__DEVELOPMENT__ ? '' : '.' + new Date().toString()) + '.json';
+	const statsJsonUrl = config.__FRONTEND_URL__ + '/stats' + (config.__DEVELOPMENT__ ? '' : '') + '.json';
 
 	AsyncLoader.getJSON(statsJsonUrl).then(function(resp) {
 		const clientVersionHash = Cookie.get('__BUILD_HASH__');
@@ -172,7 +173,7 @@ const loadStats = () => {
 
 							console.info('loader.js ready done, before initApp', 'time:', new Date().toString());
 
-							waitApis(['ya.speechkit.settings'], function() {
+							waitApis([], function() {
 
 								window.ya.speechkit.settings.apikey = config.__YA_API_KEY__;
 								window.initApp();

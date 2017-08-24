@@ -18,7 +18,7 @@ process.env.BACKEND_URL = process.env.BACKEND_URL || '';
 process.env.RUN_ENVIRONMENT = process.env.NODE_ENV || 'production';
 process.env.NODE_ENV = process.env.RUN_ENVIRONMENT;
 
-process.env.FRONTEND_URL = process.env.FRONTEND_URL || process.env.NODE_ENV === 'development' ? 'http://localhost:5080' : '';
+process.env.FRONTEND_URL = process.env.FRONTEND_URL || process.env.NODE_ENV === 'development' ? 'http://localhost:5080' : '/speakme/';
 
 const PORT = parseInt(process.env.APP_PORT);
 const isDevelopment = (process.env.NODE_ENV == 'development');
@@ -83,7 +83,7 @@ let CONFIG = {
 		],
 	} : {}),
 	output: {
-		publicPath: isDevelopment ? '/' : '/',
+		publicPath: isDevelopment ? '/' : '/speakme/',
 		path: path.resolve(__dirname, './dist'),
 		filename: '[name].[hash].bundle.js'
 	},
@@ -221,7 +221,8 @@ let CONFIG = {
 
 			RANDOM_CACHE_STRING: getBuildRandomCacheString(),
 			chunks: buildConfig.__BUILD_CHUNKS__
-		})
+		}),
+		new CopyWebpackPlugin([{from: __dirname + '/src/data', to: 'data'}])
 	]
 };
 
@@ -251,7 +252,6 @@ if (!isDevelopment) {
 if (isDevelopment) {
 	// CONFIG.plugins.push(new webpack.HotModuleReplacementPlugin());
 	CONFIG.plugins.push(new CopyWebpackPlugin([{from: __dirname + '/theme', to: 'theme'}]));
-	CONFIG.plugins.push(new CopyWebpackPlugin([{from: __dirname + '/src/data', to: 'data'}]));
 
 	// CONFIG.entry['loader'].unshift("webpack/hot/only-dev-server");
 	CONFIG.entry['loader'].unshift("webpack-dev-server/client?http://localhost:" + PORT);

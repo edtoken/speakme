@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import * as dialogActions from 'src/js/store/actions/Dialogs';
 import {getFile} from 'src/js/AsyncLoader';
 
+const config = require('src/js/config');
 
 const parseSRT = (data) => {
 	function strip(s) {
@@ -78,6 +79,8 @@ const tts = sngl(function() {
 		}
 	);
 });
+
+
 class DialogMessageItem extends Component {
 	constructor(props) {
 		super(props);
@@ -85,28 +88,29 @@ class DialogMessageItem extends Component {
 		this.handleSpeak = this.handleSpeak.bind(this);
 
 		this.state = {
-			speaking: 0
+			speaking: 0,
+			text: ""
 		}
 	}
 
 	handlePlay(e) {
 		const {subtitle} = this.props;
-
-		tts.inst().speak(
-			// Текст для озвучивания.
-			subtitle.text[0],
-			// Переопределяем настройки синтеза.
-			{
-				// Имя диктора.
-				speaker: 'zahar',
-				// Эмоции в голосе.
-				emotion: 'neutral',
-				// Функция-обработчик, которая будет вызвана по завершении озвучивания.
-				stopCallback: function() {
-					console.log("Озвучивание текста завершено.");
-				}
-			}
-		)
+		this.props.handlePlay(subtitle.start, subtitle.end);
+		// tts.inst().speak(
+		// 	// Текст для озвучивания.
+		// 	subtitle.text[0],
+		// 	// Переопределяем настройки синтеза.
+		// 	{
+		// 		// Имя диктора.
+		// 		speaker: 'zahar',
+		// 		// Эмоции в голосе.
+		// 		emotion: 'neutral',
+		// 		// Функция-обработчик, которая будет вызвана по завершении озвучивания.
+		// 		stopCallback: function() {
+		// 			console.log("Озвучивание текста завершено.");
+		// 		}
+		// 	}
+		// )
 	}
 
 	handleSpeak(e) {
@@ -122,8 +126,9 @@ class DialogMessageItem extends Component {
 						}, () => (self.timer()));
 					}
 					if (self.state.speaking === 1) {
-						console.log('STOP t');
-						streamer.inst().stop();
+						if (!window['webkitSpeechRecognition']) {
+							streamer.inst().stop();
+						}
 						return self.setState({
 							speaking: 0
 						});
@@ -133,59 +138,94 @@ class DialogMessageItem extends Component {
 			};
 			this.timer();
 
-			// start speak
-			streamer.inst().start({
-				lang: 'en-US',
-				model: 'queries',
-				// initCallback вызывается после успешной инициализации сессии.
-				initCallback: function() {
-					console.log("Началась запись звука.");
-				},
-				// Вызывается при возникновении ошибки (например, если передан неверный API-ключ).
-				errorCallback: function(err) {
-					console.log("Возникла ошибка: " + err);
-				},
-				// Будет вызвана после остановки распознавания.
-				stopCallback: function() {
-					console.log("Запись звука прекращена.");
-				},
-				dataCallback: function(text, done, merge, words, biometry) {
-					console.log("Распознанный текст: " + text);
-				},
-				particialResults: true,
-				utteranceSilence: 60
-			});
+			function startRecognizer() {
+				if ('webkitSpeechRecognition' in window) {
+					let recognition = new webkitSpeechRecognition();
+					recognition.lang = 'en';
+
+					recognition.onresult = function(event) {
+						let result = event.results[event.resultIndex];
+						let resultText = result[0].transcript.trim();
+
+						self.setState({
+							text: resultText
+						})
+					};
+
+					recognition.onend = function() {
+						console.log('Распознавание завершилось.');
+						self.setState({
+							speaking: 0
+						});
+					};
+
+					recognition.start();
+				} else {
+					streamer.inst().start({
+						lang: 'en-US',
+						model: 'queries',
+						// initCallback вызывается после успешной инициализации сессии.
+						initCallback: function() {
+							console.log("Началась запись звука.");
+						},
+						// Вызывается при возникновении ошибки (например, если передан неверный API-ключ).
+						errorCallback: function(err) {
+							console.log("Возникла ошибка: " + err);
+						},
+						// Будет вызвана после остановки распознавания.
+						stopCallback: function() {
+							console.log("Запись звука прекращена.");
+						},
+						dataCallback: function(text, done, merge, words, biometry) {
+							console.log("Распознанный текст: " + text, done, merge, words, biometry);
+							self.setState({
+								text: text,
+							})
+						},
+						particialResults: true,
+						utteranceSilence: 60
+					});
+
+				}
+			}
+
+			startRecognizer();
+
 			return this.setState({
+				text: "",
 				speaking: 5
 			});
 		}
-
-		console.log('STOP b');
-
-		this.setState({
-			speaking: 0
-		});
-		streamer.inst().stop();
 	}
 
 	render() {
 		const {subtitle} = this.props;
-		const {speaking} = this.state;
+		const {speaking, text} = this.state;
 		const speakingProcess = (speaking > 0);
+
+		let speakText = subtitle.text[0];
+		let isValidSpeak = (text && text === speakText.trim());
 
 		return (<li className="list-group-item">
 			{subtitle.text[0]}&nbsp;&nbsp;
 			<button onClick={this.handlePlay} className="btn btn-xs btn-success">play</button>
-			{!speakingProcess && <span><button onClick={this.handleSpeak} className="btn btn-xs btn-primary">speak</button>&nbsp;&nbsp;</span>}
+			&nbsp;&nbsp;
+			{!speakingProcess && <span><button onClick={this.handleSpeak}
+											   className="btn btn-xs btn-primary">speak</button>
+				&nbsp;&nbsp;</span>}
 			{speakingProcess &&
 			<button onClick={this.handleSpeak} className="btn btn-xs btn-danger">stop speak {speaking}</button>}
+
+			{text && <div>
+				Распознанный текст: <span className={'text text-' + (isValidSpeak ? 'success' : 'danger')}>{text}</span>
+			</div>}
 		</li>)
 	}
 }
 class DialogMessagesBody extends Component {
 
 	render() {
-		const {dialog_id, subtitles} = this.props;
+		const {dialog_id, subtitles, handlePlay} = this.props;
 		const hasMessages = (subtitles.length > 0);
 
 		return (<div>
@@ -193,7 +233,9 @@ class DialogMessagesBody extends Component {
 				{!hasMessages && <li className="list-group-item">empty</li>}
 				{hasMessages && subtitles.map((m, i) => {
 					return <DialogMessageItem
-						key={'message-' + dialog_id + '' + m.id + '' + i} subtitle={m}/>
+						key={'message-' + dialog_id + '' + m.id + '' + i}
+						handlePlay={handlePlay}
+						subtitle={m}/>
 				})}
 			</ul>
 		</div>)
@@ -204,7 +246,11 @@ class DialogItem extends Component {
 	constructor(props) {
 		super(props);
 		this.handleToggleStart = this.handleToggleStart.bind(this);
+		this.handlePlay = this.handlePlay.bind(this);
+		this._checkProgress = this._checkProgress.bind(this);
+
 		this.state = {
+			progress: 0,
 			subtitlesIsLoading: false,
 			subtitles: []
 		}
@@ -231,11 +277,55 @@ class DialogItem extends Component {
 
 	componentDidMount() {
 		this._update();
+		this.timerProgress = this._checkProgress();
 	}
 
 	componentWillReceiveProps(nextProps) {
 		this.props = nextProps;
 		this._update();
+	}
+
+	componentWillUnmount() {
+		clearTimeout(this.timerProgress);
+	}
+
+	componentWillUpdate() {
+		const {isActive} = this.props;
+
+		if (this.refs.video && !isActive) {
+			this.refs.video.pause();
+			this.refs.video.currentTime = 0;
+		}
+	}
+
+	componentDidUpdate() {
+		if (this.refs.video) {
+			console.log('componentDidUpdate.LOAD');
+			this.refs.video.load();
+		}
+	}
+
+
+	_checkProgress() {
+		const self = this;
+
+		return setTimeout(function() {
+
+			self.timerProgress = self._checkProgress();
+
+			if (!self.refs.video) {
+				return
+			}
+
+			let {duration, currentTime, _endTime} = self.refs.video;
+
+			if (_endTime && currentTime >= _endTime) {
+				self.refs.video.pause();
+				self.refs.video._endTime = undefined;
+				console.log('END pause', currentTime, _endTime);
+			}
+
+		}, 50);
 	}
 
 	handleToggleStart(e) {
@@ -248,9 +338,29 @@ class DialogItem extends Component {
 		}
 	}
 
+	handlePlay(start, end) {
+		start = start.split(',');
+		end = end.split(',');
+
+
+		let startData = start.shift().split(':');
+		let startSeconds = ((+startData[0]) * 60 * 60 + (+startData[1]) * 60 + (+startData[2])) * 1000 + (start.length ? parseInt(start[0]) : 0);
+		startSeconds = startSeconds / 1000;
+
+		let endData = end.shift().split(':');
+		let endSeconds = ((+endData[0]) * 60 * 60 + (+endData[1]) * 60 + (+endData[2])) * 1000 + (end.length ? parseInt(end[0]) : 0);
+		endSeconds = endSeconds / 1000;
+
+		console.log('a', start, end, 'startSeconds', startSeconds, 'endSeconds', endSeconds, this.refs.video);
+
+		this.refs.video.currentTime = startSeconds;
+		this.refs.video.play();
+		this.refs.video._endTime = endSeconds
+	}
+
 	render() {
 		const {dialog, isActive} = this.props;
-		const {subtitlesIsLoading, subtitles} = this.state;
+		const {subtitlesIsLoading, subtitles, progress} = this.state;
 
 		const iconProps = {
 			style: {
@@ -268,10 +378,13 @@ class DialogItem extends Component {
 			{isActive && <div>
 				<div className="embed-section">
 					<div className="embed-responsive embed-responsive-16by9">
-						<video controls style={{minHeight: '150px'}}>
+						<video ref="video" style={{minHeight: '150px'}}>
 							<source src={dialog.video} type="video/mp4"/>
 							Your browser does not support the video tag.
 						</video>
+						<div className="progress">
+							<div style={{'width': progress + '%'}} className="progress-bar progress-bar-info"></div>
+						</div>
 					</div>
 				</div>
 
@@ -279,7 +392,7 @@ class DialogItem extends Component {
 				<div>
 					{subtitlesIsLoading && <div><span className="label label-info">Loading...</span></div>}
 					{!subtitlesIsLoading && <div>
-						<DialogMessagesBody dialog_id={dialog.id} subtitles={subtitles}/>
+						<DialogMessagesBody dialog_id={dialog.id} subtitles={subtitles} handlePlay={this.handlePlay}/>
 					</div>}
 				</div>
 
@@ -328,7 +441,7 @@ export default class Page extends Component {
 			<div className="row">
 				<div className="col-md-6 col-md-push-3">
 					<div style={{padding: '60px 0 15px'}}>
-						<h2 className="text-center">SpeakMe</h2>
+						<h2 className="text-center">SpeakMe <small>{config.__BUILD_VERSION__}</small></h2>
 						<hr/>
 					</div>
 

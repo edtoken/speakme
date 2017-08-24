@@ -1,3 +1,5 @@
+const config = require('src/js/config');
+
 export const load = (url, type) => {
 
 	if (typeof url === 'object') {
@@ -7,7 +9,7 @@ export const load = (url, type) => {
 		return Promise.all(url);
 	}
 
-	url = url.substr(0, 3) == 'htt' ? url : '/' + url;
+	url = url.substr(0, 3) == 'htt' ? url : config.__FRONTEND_URL__ + '/' + url;
 
 	return new Promise(function(resolve, reject) {
 		let r = false;
