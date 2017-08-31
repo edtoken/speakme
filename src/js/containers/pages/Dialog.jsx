@@ -248,6 +248,10 @@ class DialogMessages extends Component {
 			fontSize: '1.3rem',
 			lineHeight: 'normal'
 		};
+		const navButtonStyles = {
+			fontSize: '2rem',
+			cursor: 'pointer'
+		};
 
 		const message = messages[this.state.messageNum];
 		const messageText = message.text[0];
@@ -293,12 +297,12 @@ class DialogMessages extends Component {
 
 		return (<div style={wrapStyles}>
 			<div className="row">
-				<div className="col-xs-2">
+				<div className="col-xs-1 text-left">
 					&nbsp;
 					{!isFirstMessage &&
-					<button onClick={this.handlePrev} className="btn btn-xs btn-warning">Вернутся</button>}
+					<i style={navButtonStyles} onClick={this.handlePrev} className="text-warning  fa fa-step-backward" />}
 				</div>
-				<div className="col-xs-8">
+				<div className="col-xs-10">
 					<h2 style={messageStyles} className="text-center">
 						{messageText}
 						{speakProcess && <span className="text-warning">&nbsp;
@@ -326,9 +330,9 @@ class DialogMessages extends Component {
 
 					</h2>
 				</div>
-				<div className="col-xs-2">
-					{renderResult &&
-					<button onClick={this.handleNext} className="btn btn-xs btn-warning">Дальше</button>
+				<div className="col-xs-1 text-right">
+					{!isLastMessage &&
+					<i style={navButtonStyles} onClick={this.handleNext} className="text-warning fa fa-step-forward" />
 					}
 					&nbsp;
 				</div>

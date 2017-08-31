@@ -13,7 +13,7 @@ class DialogsListComponent extends Component {
 
 		return (<div>
 			{dialogs.allIds.map((dialogId, i) => {
-				return <a key={'home-dialog-' + dialogId + '-' + i} href={'/#/dialog/' + dialogId}>
+				return <a key={'home-dialog-' + dialogId + '-' + i} href={'#/dialog/' + dialogId}>
 					<h3>{dialogs.byId[dialogId].title}{openIcon}</h3>
 				</a>
 			})}
