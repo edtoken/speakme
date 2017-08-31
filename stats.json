@@ -1,0 +1,12 @@
+{
+  "assetsByChunkName": {
+    "main": "main.8848d62b7cc06994ae82.bundle.js",
+    "vendor": "vendor.8848d62b7cc06994ae82.bundle.js",
+    "react": "react.8848d62b7cc06994ae82.bundle.js",
+    "redux": "redux.8848d62b7cc06994ae82.bundle.js",
+    "style": "style.8848d62b7cc06994ae82.bundle.js",
+    "loader": "loader.8848d62b7cc06994ae82.bundle.js"
+  },
+  "BUILD_HASH": "8848d62b7cc06994ae82",
+  "BUILD_VERSION": 1504188188511
+}
