@@ -160,8 +160,11 @@ const loadStats = () => {
 
 				loaderMessageNode.innerHTML = 'loading ...90%';
 				document.title = 'loading... 90%';
+				let runCounter = 0;
 
 				const run = () => {
+
+					console.log('run...');
 
 					try {
 						document.title = 'Speak with me';
@@ -175,13 +178,25 @@ const loadStats = () => {
 
 							waitApis([], function() {
 
-								window.ya.speechkit.settings.apikey = config.__YA_API_KEY__;
-								window.initApp();
+								try {
+									// window.ya.speechkit.settings.apikey = config.__YA_API_KEY__;
+									window.initApp();
 
-								setTimeout(function() {
-									loaderMessageNode.innerHTML = 'loading ...100%';
-									loaderWrapperNode.style.display = 'none';
-								}, 500);
+									setTimeout(function() {
+										loaderMessageNode.innerHTML = 'loading ...100%';
+										loaderWrapperNode.style.display = 'none';
+									}, 500);
+								} catch (e) {
+									console.error(e);
+									// setTimeout(function() {
+									// 	runCounter += 1;
+									// 	if (runCounter < 10) {
+									// 		return run();
+									// 	}
+									//
+									// 	location.reload();
+									// }, 1000);
+								}
 							});
 						});
 
@@ -194,7 +209,7 @@ const loadStats = () => {
 
 						setTimeout(function() {
 							run();
-						}, 300);
+						}, 1000);
 					}
 				};
 

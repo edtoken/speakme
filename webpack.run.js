@@ -250,10 +250,10 @@ if (!isDevelopment) {
 }
 
 if (isDevelopment) {
-	// CONFIG.plugins.push(new webpack.HotModuleReplacementPlugin());
+	CONFIG.plugins.push(new webpack.HotModuleReplacementPlugin());
 	CONFIG.plugins.push(new CopyWebpackPlugin([{from: __dirname + '/theme', to: 'theme'}]));
 
-	// CONFIG.entry['loader'].unshift("webpack/hot/only-dev-server");
+	CONFIG.entry['loader'].unshift("webpack/hot/only-dev-server");
 	CONFIG.entry['loader'].unshift("webpack-dev-server/client?http://localhost:" + PORT);
 
 	CONFIG.devServer = {
@@ -277,7 +277,7 @@ if (isDevelopment) {
 	const server = new WebpackDevServer(webpack(CONFIG), {
 		// publicPath: '/dist/',
 		inline: true,
-		// hot: true,
+		hot: true,
 		quiet: false,
 		noInfo: true,
 		stats: {colors: true},

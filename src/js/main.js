@@ -5,7 +5,7 @@ const createStore = require('src/js/store/utils/createStore').default;
 
 const initApp = window.initApp = () => {
 
-	const {store, history} = createStore();
+	const {store, history} = createStore.inst();
 	const routes = createRoutes(store, history);
 
 	console.info('main.js.initApp', 'time:', new Date().toString());
